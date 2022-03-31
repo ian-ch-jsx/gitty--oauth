@@ -45,7 +45,7 @@ describe('auth routes', () => {
       username: 'user',
       photoUrl: 'http://picture.com/profile.png',
     });
-    const res = await agent.delete('/api/v1/auth/sessions');
+    const res = await agent.delete('/api/v1/auth/session');
 
     expect(res.body).toEqual({
       success: true,
