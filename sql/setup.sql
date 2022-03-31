@@ -17,4 +17,5 @@ INSERT INTO
     posts (post)
 VALUES
     ('I wish I could have, like, 400 kittens.'),
-    ('We only have one more week of instruction and I am gonna vomit!');
+    (`We only have one more week of instruction and I'm gonna vomit!`),
+    (`Don't get excited, Trump, you're preemtively banned here, too`);
