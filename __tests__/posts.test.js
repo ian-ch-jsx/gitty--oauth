@@ -4,6 +4,17 @@ const request = require('supertest');
 const app = require('../lib/app');
 const GithubUser = require('../lib/models/GithubUser');
 
+jest.mock('../lib/middleware/authenticate.js', () => {
+  return (req, res, next) => {
+    req.user = {
+      username: 'user',
+      photoUrl: 'http://picture.com/profile.png',
+    };
+
+    next();
+  };
+});
+
 describe('gitty posts routes', () => {
   beforeEach(() => {
     return setup(pool);
