@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const GithubUser = require('../lib/models/GithubUser');
 
 jest.mock('../lib/utils/github');
 
@@ -35,6 +36,20 @@ describe('auth routes', () => {
       avatar: expect.any(String),
       iat: expect.any(Number),
       exp: expect.any(Number),
+    });
+  });
+
+  it('should sign out the user', async () => {
+    const agent = request.agent(app);
+    await GithubUser.insert({
+      username: 'user',
+      photoUrl: 'http://picture.com/profile.png',
+    });
+    const res = await agent.delete('/api/v1/auth/sessions');
+
+    expect(res.body).toEqual({
+      success: true,
+      message: 'Logout successful.',
     });
   });
 });
