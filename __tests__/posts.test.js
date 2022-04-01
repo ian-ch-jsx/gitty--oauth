@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const GithubUser = require('../lib/models/GithubUser');
 
 jest.mock('../lib/middleware/authenticate.js', () => {
   return (req, res, next) => {
@@ -24,7 +23,7 @@ describe('gitty posts routes', () => {
   });
 
   it('allows an authorized user to create posts', async () => {
-    return request(app)
+    request(app)
       .post('/api/v1/posts')
       .send({ post: 'I like turtles' })
       .then((res) => {
@@ -35,8 +34,12 @@ describe('gitty posts routes', () => {
         });
       });
   });
+
   it('allows an authorized user to view posts', async () => {
-    // NO USER
-    // USER
+    const agent = request.agent(app);
+
+    const res = await agent.get('/api/v1/posts');
+
+    expect(res.status).toEqual(401);
   });
 });
