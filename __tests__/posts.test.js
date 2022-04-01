@@ -8,7 +8,6 @@ jest.mock('../lib/middleware/authenticate.js', () => {
   return (req, res, next) => {
     req.user = {
       username: 'user',
-      photoUrl: 'http://picture.com/profile.png',
     };
 
     next();
@@ -25,11 +24,6 @@ describe('gitty posts routes', () => {
   });
 
   it('allows an authorized user to create posts', async () => {
-    await GithubUser.insert({
-      username: 'user',
-      photoUrl: 'http://picture.com/profile.png',
-    });
-
     return request(app)
       .post('/api/v1/posts')
       .send({ post: 'I like turtles' })
@@ -38,7 +32,6 @@ describe('gitty posts routes', () => {
           id: expect.any(String),
           createdAt: expect.any(String),
           post: 'I like turtles',
-          // username: 'user',
         });
       });
   });
