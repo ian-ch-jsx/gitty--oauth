@@ -40,6 +40,6 @@ describe('gitty posts routes', () => {
 
     const res = await agent.get('/api/v1/posts');
 
-    expect(res.status).toEqual(401);
+    expect(res.status).toEqual(200);
   });
 });
