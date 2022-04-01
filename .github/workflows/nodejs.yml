@@ -21,4 +21,3 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           COOKIE_NAME: ${{ secrets.COOKIE_NAME }}
           REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
-          
