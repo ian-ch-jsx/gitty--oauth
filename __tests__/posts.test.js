@@ -3,17 +3,9 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 
-jest.mock('../lib/middleware/authenticate.js', () => {
-  return (req, res, next) => {
-    req.user = {
-      username: 'user',
-    };
+jest.mock('../lib/utils/github');
 
-    next();
-  };
-});
-
-describe('gitty posts routes', () => {
+describe('backend-gitty routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
@@ -23,14 +15,18 @@ describe('gitty posts routes', () => {
   });
 
   it('allows an authorized user to create posts', async () => {
-    request(app)
+    const agent = request.agent(app);
+
+    await agent.get('/api/v1/auth/login/callback');
+
+    return agent
       .post('/api/v1/posts')
-      .send({ post: 'I like turtles' })
+      .send({ post: 'test post' })
       .then((res) => {
         expect(res.body).toEqual({
           id: expect.any(String),
           createdAt: expect.any(String),
-          post: 'I like turtles',
+          post: 'test post',
         });
       });
   });
@@ -38,8 +34,26 @@ describe('gitty posts routes', () => {
   it('allows an authorized user to view posts', async () => {
     const agent = request.agent(app);
 
-    const res = await agent.get('/api/v1/posts');
+    await agent.get('/api/v1/auth/login/callback?code=MOCK_CODE').redirects(1);
 
-    expect(res.status).toEqual(200);
+    const response = await agent.get('/api/v1/posts');
+
+    expect(response.body).toEqual([
+      {
+        createdAt: expect.any(String),
+        id: expect.any(String),
+        post: 'I wish I could have, like, 400 kittens.',
+      },
+      {
+        createdAt: expect.any(String),
+        id: expect.any(String),
+        post: 'We only have one more week of instruction and Im gonna vomit!',
+      },
+      {
+        createdAt: expect.any(String),
+        id: expect.any(String),
+        post: 'Dont get excited, Trump, youre preemtively banned here, too',
+      },
+    ]);
   });
 });
