@@ -15,8 +15,11 @@ describe('quotes routes', () => {
   });
   it('fetches a random quote', async () => {
     const expected = [
-      { author: expect.any(String), content: expect.any(String) },
+      { content: expect.any(String), author: expect.any(String) },
+      { content: expect.any(String), author: expect.any(String) },
+      { content: expect.any(String), author: expect.any(String) },
     ];
-    await request(app).get('/api/v1/quotes');
+    const res = await request(app).get('/api/v1/quotes');
+    expect(res.body).toEqual(expected);
   });
 });
